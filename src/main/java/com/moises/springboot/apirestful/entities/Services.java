@@ -1,6 +1,7 @@
 package com.moises.springboot.apirestful.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,15 @@ public class Services {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String name;
+
+    @Size(min = 0, max = 250)
+    @NotBlank
     private String description;
-    private String price;
+
+    @Min(5000)
+    @Max(100000)
+    @NotNull
+    private Integer price;
 }
