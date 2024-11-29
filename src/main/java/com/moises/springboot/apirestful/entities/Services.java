@@ -19,14 +19,16 @@ public class Services {
     private Long id;
 
     @NotBlank
+    @Size(min = 0, max = 100)
     private String name;
 
-    @Size(min = 0, max = 250)
     @NotBlank
+    @Size(min = 0, max = 250)
     private String description;
 
+
+    @NotNull
     @Min(5000)
     @Max(100000)
-    @NotNull
     private Integer price;
 }

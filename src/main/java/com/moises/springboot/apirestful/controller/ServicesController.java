@@ -2,11 +2,15 @@ package com.moises.springboot.apirestful.controller;
 
 import com.moises.springboot.apirestful.entities.Services;
 import com.moises.springboot.apirestful.service.ServicesService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -35,7 +39,12 @@ public class ServicesController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> save(@RequestBody Services services) {
+    public ResponseEntity<?> save(@Valid @RequestBody Services services,
+                                  BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return validation(bindingResult);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(servicesService.save(services));
     }
 
@@ -50,7 +59,13 @@ public class ServicesController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@RequestBody Services services, @PathVariable Long id) {
+    public ResponseEntity<?> update(@Valid @RequestBody Services services,
+                                    BindingResult bindingResult,
+                                    @PathVariable Long id) {
+
+        if (bindingResult.hasFieldErrors()) {
+            return validation(bindingResult);
+        }
 
         Optional<Services> servicesOptional = servicesService.update(id, services);
 
@@ -58,5 +73,14 @@ public class ServicesController {
             return ResponseEntity.status(HttpStatus.CREATED).body(servicesOptional.orElseThrow());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private ResponseEntity<?> validation(BindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+
+        bindingResult.getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }
