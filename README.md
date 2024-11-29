@@ -1,3 +1,5 @@
 # APIRESTful PARA BARBERIA
 ### REVISAR RAMA FEATURE!
-He utilizado spring boot para la creación he implementado el crud de los servicios que se ofreceran en la barberia hasta el momento.
+
+Para este proyecto estoy utilizando JDK 17 y dependencias como Lombok, Spring Data JPA, MySQL y Spring Validation.
+Mas adelante quiero implementar Spring Security con JWT.
