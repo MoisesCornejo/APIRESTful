@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/services")
@@ -30,12 +27,21 @@ public class ServicesController {
 
     @GetMapping("/service/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
+
+        if (id == null) {
+            throw new NullPointerException("The id provided does not exist");
+        }
+        if (id <= 0) {
+            throw new IllegalArgumentException("He provided id must be greater than 0");
+        }
+
         Optional<Services> servicesOptional = servicesService.findById(id);
 
         if (servicesOptional.isPresent()) {
             return ResponseEntity.ok(servicesOptional.orElseThrow());
         }
-        return ResponseEntity.notFound().build();
+
+        throw new NullPointerException("The id must not be null");
     }
 
     @PostMapping("/create")
