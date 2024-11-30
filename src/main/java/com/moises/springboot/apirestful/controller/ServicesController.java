@@ -3,6 +3,8 @@ package com.moises.springboot.apirestful.controller;
 import com.moises.springboot.apirestful.entities.Services;
 import com.moises.springboot.apirestful.service.ServicesService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -26,21 +28,13 @@ public class ServicesController {
     }
 
     @GetMapping("/service/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
-
-        if (id == null) {
-            throw new NullPointerException("The id provided does not exist");
-        }
-        if (id <= 0) {
-            throw new IllegalArgumentException("He provided id must be greater than 0");
-        }
+    public ResponseEntity<?> findById(@PathVariable @NotNull @Min(1) Long id) {
 
         Optional<Services> servicesOptional = servicesService.findById(id);
 
         if (servicesOptional.isPresent()) {
             return ResponseEntity.ok(servicesOptional.orElseThrow());
         }
-
         throw new NullPointerException("The id must not be null");
     }
 
